@@ -1,12 +1,9 @@
 #include "game.h"
+#include "graphics.h"
 #include <SDL/SDL.h>
-//#include <SDL2/SDL.h>
-//#include <SDL2/SDL_timer.h>
+#include "sprite.h"
 
-namespace {
-    const int kScreenWidth = 640;
-    const int kScreenHeight = 480;
-    const int kBitsPerPixel = 32;
+namespace {     // anonymous namespace with constant values
     const int kFPS = 60;
 }
 
@@ -14,16 +11,10 @@ namespace {
 Game::Game(){
     SDL_Init(SDL_INIT_EVERYTHING); // initialize sdl2
     SDL_ShowCursor(SDL_DISABLE);
-    screen_ = SDL_SetVideoMode(
-                                kScreenWidth, 
-                                kScreenHeight, 
-                                kBitsPerPixel, 
-                                SDL_FULLSCREEN);
     eventLoop();    // Infinite loop containing everything
 }
 // Destructor
 Game::~Game(){
-    SDL_FreeSurface(screen_);
     SDL_Quit();     // quit sdl
 }
 
@@ -32,7 +23,12 @@ Game::~Game(){
 // update() everything: move everything that moves, check collisions
 // Draw() everything
 void Game::eventLoop(){
+    Graphics graphics;
     SDL_Event event;    // Event handler
+
+    sprite_.reset(new Sprite(
+                        "content/naruto.png", 0, 0, 100, 100
+                        ));
 
     bool running = true;
     while (running){
@@ -50,12 +46,19 @@ void Game::eventLoop(){
         }
 
         update();   // instantiate update and draw methods
-        draw();
+        draw(graphics);
         // ensure loop lasts 1/60 of a second or 1000/60ths of millisecond
         const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
         SDL_Delay(1000/kFPS - elapsed_time_ms);  // (1000ms / 60 fps ms) minus time elapsed doing poll to maintain 60fps
+        // Test to visualize fps
+        const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;  // elapsed time / 1000
+        const float fps = 1 / seconds_per_frame;    // how many frames in a second
+        printf("fps = %f\n", fps);
     }
 }
 
 void Game::update(){}
-void Game::draw(){}
+void Game::draw(Graphics& graphics){
+    sprite_ -> draw(graphics, 320, 240);
+    graphics.flip();
+}

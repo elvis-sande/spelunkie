@@ -1,4 +1,4 @@
 compile:
-	clang++ -o gen/spelunkie src/**.c++ -lSDL -lSDL2
+	clang++ -o gen/spelunkie src/**.c++ -lSDL
 run:
 	gen/spelunkie
