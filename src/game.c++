@@ -27,8 +27,7 @@ void Game::eventLoop(){
     SDL_Event event;    // Event handler
 
     sprite_.reset(new Sprite(
-                        "/content/naruto.png", 0, 0, 500, 500
-                        ));
+                        "content/naruto.bmp", 0, 0, 100, 100));
 
     bool running = true;
     while (running){
