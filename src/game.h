@@ -11,9 +11,11 @@ struct Game{
     Game();
     ~Game();
 
+    static int kTileSize;
+
     private:
     void eventLoop();       // Define eventLoop() method
-    void update();          // update and draw helper methods
+    void update(int elapsed_time_ms);          // update and draw helper methods
     void draw(Graphics& graphics);
 
     boost::scoped_ptr<Sprite> sprite_;
