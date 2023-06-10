@@ -1,6 +1,6 @@
 #include "game.h"
-#include "graphics.h"
 #include <SDL/SDL.h>
+#include "graphics.h"
 #include "sprite.h"
 
 namespace {     // anonymous namespace with constant values
@@ -23,11 +23,11 @@ Game::~Game(){
 // update() everything: move everything that moves, check collisions
 // Draw() everything
 void Game::eventLoop(){
-    Graphics graphics;
+    Graphics graphics;  // call graphics 
     SDL_Event event;    // Event handler
 
     sprite_.reset(new Sprite(
-                        "content/naruto.png", 0, 0, 100, 100
+                        "/content/naruto.png", 0, 0, 500, 500
                         ));
 
     bool running = true;
