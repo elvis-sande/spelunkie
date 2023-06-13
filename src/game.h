@@ -3,7 +3,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
-struct Sprite;
+struct Player;
 struct Graphics;
 
 // Definition of game class
@@ -18,7 +18,7 @@ struct Game{
     void update(int elapsed_time_ms);          // update and draw helper methods
     void draw(Graphics& graphics);
 
-    boost::scoped_ptr<Sprite> sprite_;
+    boost::scoped_ptr<Player> player_;
 
 };
 

@@ -1,8 +1,11 @@
 #include "game.h"
 #include <SDL/SDL.h>
+#include <SDL/SDL_events.h>
+#include <SDL/SDL_keysym.h>
 #include <SDL/SDL_timer.h>
 #include "graphics.h"
-#include "animated_sprite.h"
+#include "player.h"
+#include "input.h"
 
 namespace {     // anonymous namespace with constant values
     const int kFPS = 60;
@@ -27,26 +30,47 @@ Game::~Game(){
 // Draw() everything
 void Game::eventLoop(){
     Graphics graphics;  // call graphics 
+    Input input;
     SDL_Event event;    // Event handler
 
-    sprite_.reset(new AnimatedSprite(
-                        "content/naruto.bmp", 0, 0, kTileSize, kTileSize, 15, 4));
+    player_.reset(new Player(320, 240));
 
     bool running = true;
     int last_update_time = SDL_GetTicks();
 
     while (running){
         const int start_time_ms = SDL_GetTicks();   // Get ticks returns elapsed miliseconds since sdl init
+        input.beginNewFrame();
         while (SDL_PollEvent(&event)){
             switch (event.type){
-                case SDL_KEYDOWN:       // Condition to exit if escape is pressed
-                    if (event.key.keysym.sym == SDLK_ESCAPE){
-                        running = false;
-                    }
+                case SDL_KEYDOWN:       
+                    input.keyDownEvent(event);
                     break;
+                case SDL_KEYUP:
+                    input.keyUpEvent(event);
                 default:
                     break;
             }
+        }
+
+        // control the order of evaluating input
+        if (input.wasKeyPressed(SDLK_ESCAPE)){
+            running = false;
+        }
+        // If both left and right are being pressed, stop moving
+        if (input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)) {
+            player_ -> stopMoving();
+        }
+        else if (input.isKeyHeld(SDLK_LEFT)) // If left, move left
+        {
+            player_ -> startMovingLeft();
+        }
+        else if (input.isKeyHeld(SDLK_RIGHT))  // if right, move right
+        {
+            player_ -> startMovingRight();
+        }
+        else {  // else, stop
+            player_ -> stopMoving();
         }
 
         const int current_time_ms = SDL_GetTicks();
@@ -59,16 +83,17 @@ void Game::eventLoop(){
         SDL_Delay(1000/kFPS - elapsed_time_ms);  // (1000ms / 60 fps ms) minus time elapsed doing poll to maintain 60fps
         
         /* Test to visualize fps in terminal */
-        const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;  // elapsed time / 1000
+        /*const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;  // elapsed time / 1000
         const float fps = 1 / seconds_per_frame;    // how many frames in a second
-        printf("fps = %f\n", fps);
+        printf("fps = %f\n", fps);*/
     }
 }
 
 void Game::update(int elapsed_time_ms){
-    sprite_ -> update(elapsed_time_ms);
+    player_ -> update(elapsed_time_ms);
 }
 void Game::draw(Graphics& graphics){
-    sprite_ -> draw(graphics, 320, 240);
+    graphics.clearScreen();  //  clear screen before drawing next sprite (sprite trail fix)
+    player_ -> draw(graphics);
     graphics.flip();
 }

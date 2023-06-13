@@ -19,6 +19,11 @@ Graphics::~Graphics(){
     SDL_FreeSurface(screen_);
 };
 
+//  Trying to fix sprite trail issue
+void Graphics::clearScreen() {
+    SDL_FillRect(screen_, NULL, 0);
+}
+
 // Definition of blitsurface public method
 void Graphics::blitSurface(
         SDL_Surface* source,

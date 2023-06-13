@@ -17,8 +17,10 @@ struct Graphics {
     
     void flip();
 
+    void clearScreen();     // trying to fix sprite trail issue
+
     private:
-    SDL_Surface* screen_;
+        SDL_Surface* screen_;
 };
 
 #endif  // GRAPHICS_H_
