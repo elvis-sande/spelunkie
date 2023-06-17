@@ -1,15 +1,16 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 #include "sprite.h"
+#include <map>
 
 
 struct Graphics;
 
 struct Player {
 
-    Player(int x, int y);
+    Player(Graphics& graphics, int x, int y);
 
     void update(int elapsed_time_ms);
     void draw(Graphics& graphics);
@@ -19,10 +20,35 @@ struct Player {
     void stopMoving();
 
     private:
+    enum MotionType {
+        STANDING,
+        WALKING,
+    };
+    enum HorizontalFacing {
+        LEFT,
+        RIGHT,
+    };
+    struct SpriteState {
+        SpriteState(MotionType motion_type = STANDING,
+                    HorizontalFacing horizontal_facing = RIGHT) :
+                        motion_type(motion_type),
+                        horizontal_facing(horizontal_facing) {};
+        MotionType motion_type;
+        HorizontalFacing horizontal_facing;
+    };
+
+    friend bool operator<(const SpriteState& a, const SpriteState& b);
+
+    void initializeSprites(Graphics& graphics);
+    
+    SpriteState getSpriteState();
+
     int x_, y_;
     float velocity_x_;
     float acceleration_x_;
-    boost::scoped_ptr<Sprite> sprite_;
+    HorizontalFacing horizontal_facing_;
+
+    std::map<SpriteState, boost::shared_ptr<Sprite>> sprites_;
 };
 
 #endif // PLAYER_H_

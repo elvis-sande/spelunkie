@@ -7,13 +7,13 @@
 struct Graphics;
 
 struct Sprite {
-    Sprite(const std::string& file_path,    // string for filepath
+    Sprite(Graphics& graphics,
+            const std::string& file_path,    // string for filepath
             int source_x, int source_y,     // where to look for specific sprite in spritesheet
             int width, int height);         // width & height   
-    virtual ~Sprite();  // virtual since it's being inherited from
+    
 
-    // update method that takes elapsed time in ms
-    virtual void update(int ){};
+    virtual void update(int ){};  // update method that takes elapsed time in ms
 
     // Draw method
     void draw(Graphics& graphics, int x, int y);

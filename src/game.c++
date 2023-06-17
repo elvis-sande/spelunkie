@@ -11,7 +11,7 @@ namespace {     // anonymous namespace with constant values
     const int kFPS = 60;
 }
 
-int Game::kTileSize = 100;
+int Game::kTileSize = 90;
 
 // Constructor
 Game::Game(){
@@ -33,7 +33,7 @@ void Game::eventLoop(){
     Input input;
     SDL_Event event;    // Event handler
 
-    player_.reset(new Player(320, 240));
+    player_.reset(new Player(graphics, 320, 240));
 
     bool running = true;
     int last_update_time = SDL_GetTicks();
@@ -61,11 +61,11 @@ void Game::eventLoop(){
         if (input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)) {
             player_ -> stopMoving();
         }
-        else if (input.isKeyHeld(SDLK_LEFT)) // If left, move left
+        else if (input.isKeyHeld(SDLK_LEFT))        // If left, move left
         {
             player_ -> startMovingLeft();
         }
-        else if (input.isKeyHeld(SDLK_RIGHT))  // if right, move right
+        else if (input.isKeyHeld(SDLK_RIGHT))       // if right, move right
         {
             player_ -> startMovingRight();
         }
@@ -77,7 +77,7 @@ void Game::eventLoop(){
         update(current_time_ms - last_update_time); // instantiate update method
         last_update_time = current_time_ms;
 
-        draw(graphics); // instantiate draw method
+        draw(graphics);                             // instantiate draw method
         // ensure loop lasts 1/60 of a second or 1000/60ths of millisecond
         const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
         SDL_Delay(1000/kFPS - elapsed_time_ms);  // (1000ms / 60 fps ms) minus time elapsed doing poll to maintain 60fps

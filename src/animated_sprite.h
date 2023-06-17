@@ -5,7 +5,8 @@
 
 // inherits from Sprite class (public inheritance)
 struct AnimatedSprite : public Sprite{
-    AnimatedSprite(const std::string& file_path,    // string for filepath
+    AnimatedSprite(Graphics& graphics,
+                    const std::string& file_path,    // string for filepath
                     int source_x, int source_y,     // where to look for specific sprite in spritesheet
                     int width, int height,
                     int fps, int num_frames);       // additional fps and total number of frames for animation
