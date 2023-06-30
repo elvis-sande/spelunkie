@@ -26,6 +26,8 @@ struct Player {
     enum MotionType {
         STANDING,
         WALKING,
+        JUMPING,
+        FALLING,
     };
     enum HorizontalFacing {
         LEFT,

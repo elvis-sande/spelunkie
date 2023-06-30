@@ -12,6 +12,10 @@ namespace {
     const float kJumpSpeed = 0.325f;  // Jump speed in px per ms
     const int kJumpTime = 275;        // time in ms
     const float kGravity = 0.0012f;
+
+    const int kJumpFrame = 0;
+    const int kFallFrame = 0;
+
 }
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b) {
@@ -105,10 +109,29 @@ void Player::initializeSprites(Graphics& graphics) {
     sprites_[SpriteState(WALKING, LEFT)] = boost::shared_ptr<Sprite>(new AnimatedSprite(graphics,
     "content/kakashi.bmp", 555, 270, Game::kTileSize, Game::kTileSize, 15, 6));
 
+    sprites_[SpriteState(JUMPING, LEFT)] = boost::shared_ptr<Sprite>(new Sprite(graphics,
+    "content/kakashi.bmp", 735, 360, Game::kTileSize, Game::kTileSize));
+
+    sprites_[SpriteState(FALLING, LEFT)] = boost::shared_ptr<Sprite>(new Sprite(graphics,
+    "content/kakashi.bmp", 825, 360, Game::kTileSize, Game::kTileSize));
+
+    sprites_[SpriteState(JUMPING, RIGHT)] = boost::shared_ptr<Sprite>(new Sprite(graphics,
+    "content/kakashi.bmp", 180, 360, Game::kTileSize, Game::kTileSize));
+
+    sprites_[SpriteState(FALLING, RIGHT)] = boost::shared_ptr<Sprite>(new Sprite(graphics,
+    "content/kakashi.bmp", 270, 360, Game::kTileSize, Game::kTileSize));
+
 }
 
 Player::SpriteState Player::getSpriteState() {
-    return SpriteState(acceleration_x_ == 0.0f ? STANDING : WALKING, horizontal_facing_);
+    MotionType motion;
+    if (on_ground()) {
+        motion = acceleration_x_ == 0.0f ? STANDING : WALKING;
+    }
+    else {
+        motion = velocity_y_ < 0.0f ? JUMPING : FALLING;
+    }
+    return SpriteState( motion, horizontal_facing_);
 };
 
 void Player::Jump::reset() {
