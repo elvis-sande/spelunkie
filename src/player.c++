@@ -33,6 +33,7 @@ Player::Player(Graphics& graphics, int x, int y) :
         velocity_x_(0.0f), velocity_y_(0.0f),  // initial move and jump velocity
         acceleration_x_(0.0f), 
         horizontal_facing_(RIGHT),
+        vertical_facing_(HORIZONTAL),
         on_ground_(false) {
             initializeSprites(graphics);
 };
@@ -82,6 +83,16 @@ void Player::startMovingRight() {
 void Player::stopMoving() {
     acceleration_x_ = 0.0f;
 };
+
+void Player::lookUp(){    // Defined here, declared in header, implemented in game.cpp
+    vertical_facing_ = UP;
+}
+void Player::lookDown(){
+    vertical_facing_ = DOWN;
+}
+void Player::lookHorizontal(){
+    vertical_facing_ = HORIZONTAL;
+}
 
 void Player::startJump(){
     if (on_ground()) {                  // If we are on the ground,

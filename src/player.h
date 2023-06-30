@@ -19,6 +19,10 @@ struct Player {
     void startMovingRight();
     void stopMoving();
 
+    void lookUp();
+    void lookDown();
+    void lookHorizontal();
+
     void startJump();
     void stopJump();
 
@@ -33,13 +37,22 @@ struct Player {
         LEFT,
         RIGHT,
     };
+    enum VerticalFacing {
+        UP,
+        DOWN,
+        HORIZONTAL
+    };
+
     struct SpriteState {
-        SpriteState(MotionType motion_type = STANDING,
-                    HorizontalFacing horizontal_facing = RIGHT) :
-                        motion_type(motion_type),
-                        horizontal_facing(horizontal_facing) {};
+        SpriteState(MotionType motion_type = STANDING,    // constructor defaults
+                    HorizontalFacing horizontal_facing = RIGHT,
+                    VerticalFacing vertical_facing = HORIZONTAL) :
+                        motion_type(motion_type),    // constructor initialization
+                        horizontal_facing(horizontal_facing),
+                        vertical_facing(vertical_facing) {};
         MotionType motion_type;
         HorizontalFacing horizontal_facing;
+        VerticalFacing vertical_facing;
     };
 
     friend bool operator<(const SpriteState& a, const SpriteState& b);
@@ -68,6 +81,7 @@ struct Player {
     float velocity_x_, velocity_y_;  // movement and jump velocity
     float acceleration_x_;
     HorizontalFacing horizontal_facing_;
+    VerticalFacing vertical_facing_;
     bool on_ground_;
     Jump jump_;
 

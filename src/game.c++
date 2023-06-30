@@ -73,6 +73,21 @@ void Game::eventLoop(){
             player_ -> stopMoving();
         }
 
+        if (input.isKeyHeld(SDLK_UP) && input.isKeyHeld(SDLK_DOWN)) {
+            player_ -> lookHorizontal();
+        }
+        else if (input.isKeyHeld(SDLK_UP))        // If left, move left
+        {
+            player_ -> lookUp();
+        }
+        else if (input.isKeyHeld(SDLK_DOWN))       // if right, move right
+        {
+            player_ -> lookDown();
+        }
+        else {  // else, stop
+            player_ -> lookHorizontal();
+        }
+
         // Player jump logic
         if (input.wasKeyPressed(SDLK_UP)) {
             player_ -> startJump();  // player.h jump method, implemented in player.c++
